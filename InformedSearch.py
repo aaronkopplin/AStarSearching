@@ -18,13 +18,11 @@ class Maze(QWidget):
         self.setLayout(grid)
         for alpha in range(16):  # X axis
             for numeric in range(1, 17):  # Y axis
-                c = Cell.Cell()
+                c = Cell.Cell(chr(97 + alpha), numeric)
                 if alpha == 0 or numeric == 1:
                     c.setText(chr(97 + alpha) + ", " + str(numeric))
-                grid.addWidget(c, numeric, alpha)
 
-    def keyPressEvent(self, event):
-        print(event.key())
+                grid.addWidget(c, numeric, alpha)
 
 
 if __name__ == "__main__":
