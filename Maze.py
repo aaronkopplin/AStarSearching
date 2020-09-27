@@ -22,15 +22,54 @@ class Maze(QtWidgets.QWidget):
         self.show()
 
     def BuildGrid(self):
-        for alpha in range(self.width):  # X axis
-            for numeric in range(1, self.height + 1):  # Y axis
-                c = Cell.Cell(chr(97 + alpha), numeric)
-                if alpha == 0 or numeric == 1:
-                    c.setText(chr(97 + alpha) + ", " + str(numeric))
+        for numeric in range(self.height):  # X axis
+            row = []
+            for alpha in range(self.width):  # Y axis
+                c = Cell.Cell(numeric, alpha)
+                if alpha == 0 or numeric == 0:
+                    c.setText(chr(97 + alpha) + ", " + str(numeric + 1))
                 self.grid.addWidget(c, numeric, alpha)
-                self.cells.append(c)
+                row.append(c)
+            self.cells.append(row)
 
     def setWalls(self, leftWall: bool, rightWall: bool, topWall: bool, bottomWall: bool):
-        for cell in self.cells:
-            cell.setWalls(leftWall, rightWall, topWall, bottomWall)
+        for row in self.cells:
+            for cell in row:
+                cell.setWalls(leftWall, rightWall, topWall, bottomWall)
+
+    def produceAdjacencyMartix(self):
+        rows = []
+        for row in range(self.height):
+            for column in range(self.width):
+                adjacencyRow = []
+                cell = self.cells[row][column]
+
+                for row2 in range(self.height):
+                    for column2 in range(self.width):
+                        # cell2 = self.cells[row2][column2]
+
+                        val = 0
+                        if column2 == column - 1 and row2 == row and not cell.leftWall():  # LEFT
+                            val = 1
+                        if column2 == column + 1 and row2 == row and not cell.rightWall():  # RIGHT
+                            val = 1
+                        if row2 == row + 1 and column2 == column and not cell.bottomWall():  # BOTTOM
+                            val = 1
+                        if row2 == row - 1 and column2 == column and not cell.topWall():  # TOP
+                            val = 1
+
+                        adjacencyRow.append(val)
+                rows.append(adjacencyRow)
+        return rows
+
+    def printAdjacencyMatrix(self):
+        mat = self.produceAdjacencyMartix()
+        print("---------------------------------------------------------------")
+        for row in mat:
+            print("[" + ", ".join(map(str, row)) + "]")
+        print("---------------------------------------------------------------")
+
+    def aStarSearch(self, startCell):
+        open = []
+        closed = []
 

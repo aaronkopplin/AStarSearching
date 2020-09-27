@@ -34,9 +34,16 @@ class Window(QWidget):
             verticalLayout.addWidget(button)
             button.toggled.connect(self.buttonsClicked)
 
+        self.printMAtrixButton = QtWidgets.QPushButton("Print Matrix")
+        verticalLayout.addWidget(self.printMAtrixButton)
+        self.printMAtrixButton.clicked.connect(self.printMatrix)
+
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         verticalLayout.addItem(spacerItem)
         self.grid.addLayout(verticalLayout, 0, 1,1,1)
+
+    def printMatrix(self):
+        self.maze.printAdjacencyMatrix()
 
     def buttonsClicked(self):
         self.maze.setWalls(self.buttons[0].isChecked(), self.buttons[1].isChecked(),
@@ -50,4 +57,5 @@ class Window(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     maze = Window()
+    # print(maze.maze.produceAdjacencyMartix())
     sys.exit(app.exec_())
