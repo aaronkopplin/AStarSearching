@@ -10,7 +10,6 @@ from PyQt5.QtCore import QRect
 class Maze(QtWidgets.QWidget):
     def __init__(self, width, height):
         super().__init__()
-        # self.setGeometry(QRect(0, 0, 650, 650))
         self.width = width
         self.height = height
         self.grid = QGridLayout()
@@ -18,6 +17,7 @@ class Maze(QtWidgets.QWidget):
         self.grid.setHorizontalSpacing(0)
         self.grid.setVerticalSpacing(0)
         self.setLayout(self.grid)
+        self.cells = []
         self.BuildGrid()
         self.show()
 
@@ -28,3 +28,9 @@ class Maze(QtWidgets.QWidget):
                 if alpha == 0 or numeric == 1:
                     c.setText(chr(97 + alpha) + ", " + str(numeric))
                 self.grid.addWidget(c, numeric, alpha)
+                self.cells.append(c)
+
+    def setWalls(self, leftWall: bool, rightWall: bool, topWall: bool, bottomWall: bool):
+        for cell in self.cells:
+            cell.setWalls(leftWall, rightWall, topWall, bottomWall)
+

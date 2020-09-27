@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import  QtWidgets
-from PyQt5.QtWidgets import QGridLayout, QWidget, QApplication, QVBoxLayout, QSpacerItem, QSplitter
+from PyQt5.QtWidgets import QGridLayout, QWidget, QApplication, QVBoxLayout, QSpacerItem, QSplitter, QRadioButton
 from PyQt5.QtWidgets import QSizePolicy
 
 from PyQt5.QtCore import QRect, Qt
@@ -25,19 +25,22 @@ class Window(QWidget):
         self.maze = Maze.Maze(self.mazeWidth, self.mazeHeight)
         self.maze.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.grid.addWidget(self.maze, 0, 0)
-
-    def BuildMenu(self):
-        buttons = [QtWidgets.QRadioButton(x) for x in ["Left Wall", "Right Wall", "TopWall", "Bottom Wall", "Water",
-                                                       "Roof", "Spawn Area"]]
-        verticalLayout = QtWidgets.QVBoxLayout()
-        for button in buttons:
-            verticalLayout.addWidget(button)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        verticalLayout.addItem(spacerItem)
-
-        self.grid.addLayout(verticalLayout, 0, 1,1,1)
         self.grid.setColumnStretch(0, 1)
 
+    def BuildMenu(self):
+        verticalLayout = QtWidgets.QVBoxLayout()
+        self.buttons = [QtWidgets.QCheckBox(x) for x in ["Left Wall", "Right Wall", "Top Wall", "Bottom Wall"]]
+        for button in self.buttons:
+            verticalLayout.addWidget(button)
+            button.toggled.connect(self.buttonsClicked)
+
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        verticalLayout.addItem(spacerItem)
+        self.grid.addLayout(verticalLayout, 0, 1,1,1)
+
+    def buttonsClicked(self):
+        self.maze.setWalls(self.buttons[0].isChecked(), self.buttons[1].isChecked(),
+                           self.buttons[2].isChecked(), self.buttons[3].isChecked())
 
     def keyPressEvent(self, event):
         self.key = event.key()
