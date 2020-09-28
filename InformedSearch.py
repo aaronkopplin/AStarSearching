@@ -61,7 +61,7 @@ class Window(QWidget):
 
         openSet = [startIndex]
         closedSet = []
-        path = []
+        path = {}
         while len(openSet) > 0:
             currentNodeIndex = 0
             for nodeIndex in openSet:
@@ -71,12 +71,17 @@ class Window(QWidget):
                                                                                          goalIndex % 16):
                     currentNodeIndex = nodeIndex
 
-            path.append(currentNodeIndex)
+            # path.append(currentNodeIndex)
             openSet.remove(currentNodeIndex)
             closedSet.append(currentNodeIndex)
 
             if (currentNodeIndex == goalIndex):
-                print(path)
+                total_path = [currentNodeIndex]
+                while currentNodeIndex in path.keys():
+                    currentNodeIndex = path[currentNodeIndex]
+                    total_path = [currentNodeIndex] + total_path
+
+                print(total_path)
                 return
 
             currentChildren = []
@@ -93,7 +98,7 @@ class Window(QWidget):
                             openSet[openSet.index(child)] / 16, openSet[openSet.index(child)] % 16, startIndex / 16,
                             startIndex % 16)):
                         continue
-
+                path[child] = currentNodeIndex;
                 openSet.append(child)
 
 
