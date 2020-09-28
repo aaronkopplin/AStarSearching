@@ -2,9 +2,10 @@ import sys
 from PyQt5 import  QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QWidget, QApplication, QVBoxLayout, QSpacerItem, QSplitter, QRadioButton
 from PyQt5.QtWidgets import QSizePolicy
-
+import grid
 from PyQt5.QtCore import QRect, Qt
 import Cell, Maze
+import math
 
 
 class Window(QWidget):
@@ -54,8 +55,50 @@ class Window(QWidget):
         print("maze " + str(self.key))
 
 
+    def aStarSearch(self, startIndex, goalIndex, matrix):
+        def h(x1, y1, x2, y2):
+            return math.sqrt(math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
+
+        openSet = [startIndex]
+        closedSet = []
+        path = []
+        while len(openSet) > 0:
+            currentNodeIndex = 0
+            for nodeIndex in openSet:
+                if h(nodeIndex / 16, nodeIndex % 16, goalIndex / 16, goalIndex % 16) < h(currentNodeIndex / 16,
+                                                                                         currentNodeIndex % 16,
+                                                                                         goalIndex / 16,
+                                                                                         goalIndex % 16):
+                    currentNodeIndex = nodeIndex
+
+            path.append(currentNodeIndex)
+            openSet.remove(currentNodeIndex)
+            closedSet.append(currentNodeIndex)
+
+            if (currentNodeIndex == goalIndex):
+                print(path)
+                return
+
+            currentChildren = []
+            for i in range(len(matrix[currentNodeIndex])):
+                if (matrix[currentNodeIndex][i]):
+                    currentChildren.append(i)
+
+            for child in currentChildren:
+                if child in closedSet:
+                    continue
+
+                if child in openSet:
+                    if (h(child / 16, child % 16, startIndex / 16, startIndex % 16) > h(
+                            openSet[openSet.index(child)] / 16, openSet[openSet.index(child)] % 16, startIndex / 16,
+                            startIndex % 16)):
+                        continue
+
+                openSet.append(child)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     maze = Window()
-    # print(maze.maze.produceAdjacencyMartix())
+    maze.aStarSearch(0, 255, grid.MATRIX)
     sys.exit(app.exec_())

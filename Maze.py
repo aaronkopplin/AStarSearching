@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QWidget, QApplication
 import Cell
 from PyQt5.QtWidgets import QSizePolicy
+import grid
 
 from PyQt5.QtCore import QRect
 
@@ -28,6 +29,7 @@ class Maze(QtWidgets.QWidget):
                 c = Cell.Cell(numeric, alpha)
                 if alpha == 0 or numeric == 0:
                     c.setText(chr(97 + alpha) + ", " + str(numeric + 1))
+                # c.setText(str(numeric * 16 + alpha))
                 self.grid.addWidget(c, numeric, alpha)
                 row.append(c)
             self.cells.append(row)
@@ -69,7 +71,5 @@ class Maze(QtWidgets.QWidget):
             print("[" + ", ".join(map(str, row)) + "]")
         print("---------------------------------------------------------------")
 
-    def aStarSearch(self, startCell):
-        open = []
-        closed = []
+
 
