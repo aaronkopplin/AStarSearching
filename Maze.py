@@ -48,8 +48,6 @@ class Maze(QtWidgets.QWidget):
 
                 for row2 in range(self.height):
                     for column2 in range(self.width):
-                        # cell2 = self.cells[row2][column2]
-
                         val = 0
                         if column2 == column - 1 and row2 == row and not cell.leftWall():  # LEFT
                             val = 1
